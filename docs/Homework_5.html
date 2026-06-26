@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -119,26 +154,93 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="question-2" class="level3">
 <h3 class="anchored" data-anchor-id="question-2">Question 2</h3>
+<p>Suppose we have a list called my_list. Each element of the list is a numeric data frame (all columns are numeric). We want use <code>lapply()</code> to run the code <code>cor(numeric_matrix, method = "kendall")</code> on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify <code>method = "kendall"</code> when calling <code>lapply()</code>)</p>
 <p><strong>Answer:</strong></p>
 </section>
 <section id="question-3" class="level3">
 <h3 class="anchored" data-anchor-id="question-3">Question 3</h3>
+<p>What are two advantages of using <code>purrr</code> functions instead of the BaseR <code>apply</code> family?</p>
 <p><strong>Answer:</strong></p>
 </section>
 <section id="question-4" class="level3">
 <h3 class="anchored" data-anchor-id="question-4">Question 4</h3>
+<p>What is a side-effect function?</p>
 <p><strong>Answer:</strong></p>
 </section>
 <section id="question-5" class="level3">
 <h3 class="anchored" data-anchor-id="question-5">Question 5</h3>
+<p>Why can you name a variable <code>sd</code> in a function and not cause any issues with the <code>sd</code> function?</p>
 <p><strong>Answer:</strong></p>
 </section>
 </section>
 <section id="task-2---writing-r-functions" class="level2">
 <h2 class="anchored" data-anchor-id="task-2---writing-r-functions">Task 2 - Writing R Functions</h2>
-<p>Adding this to make a change.</p>
+<section id="step-1" class="level3">
+<h3 class="anchored" data-anchor-id="step-1">Step 1</h3>
+<p><strong>Task:</strong> Write a basic function (call it <code>getRMSE()</code>) that takes in a vector of responses and a vector of predictions and outputs the RMSE (Root Mean Square Error).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>getRMSE <span class="ot">&lt;-</span> <span class="cf">function</span>(.x) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="step-2" class="level3">
+<h3 class="anchored" data-anchor-id="step-2">Step 2</h3>
+<p><strong>Task:</strong> Run the following code to create some response values and predictions.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">10</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>resp <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">10</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="fu">lm</span>(resp <span class="sc">~</span> x), <span class="fu">data.frame</span>(x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="step-3" class="level3">
+<h3 class="anchored" data-anchor-id="step-3">Step 3</h3>
+<p><strong>Task:</strong> Write a function called <code>getMAE()</code> that follows the specifications of the <code>getRMSE()</code> function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>getMAE <span class="ot">&lt;-</span> <span class="cf">function</span>(.x) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="step-4" class="level3">
+<h3 class="anchored" data-anchor-id="step-4">Step 4</h3>
+<p><strong>Task:</strong> Run the following code to create some response values and predictions.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">10</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>resp <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">10</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="fu">lm</span>(resp <span class="sc">~</span> x), <span class="fu">data.frame</span>(x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="step-5" class="level3">
+<h3 class="anchored" data-anchor-id="step-5">Step 5</h3>
+<p><strong>Task:</strong> Let’s create a <code>wrapper</code> function that can be used to get either or both metrics returned with a single function call. Do not rewrite your above two functions, call them inside the <code>wrapper</code> function (we would call the <code>getRMSE()</code> and <code>getMAE()</code> functions helper functions). When returning your values, give them appropriate names.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#change function name</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>wrapper <span class="ot">&lt;-</span> <span class="cf">function</span>(.x, .y) {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="cn">FALSE</span>) {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Incorrect data passed as an argument."</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">5</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="step-6" class="level3">
+<h3 class="anchored" data-anchor-id="step-6">Step 6</h3>
+<p><strong>Task:</strong> Run the following code to create some response values and predictions.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">10</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>resp <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">10</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="fu">lm</span>(resp <span class="sc">~</span> x), <span class="fu">data.frame</span>(x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

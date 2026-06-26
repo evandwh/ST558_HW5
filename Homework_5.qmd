@@ -16,24 +16,102 @@ What is the purpose of the `lapply()` function? What is the equivalent `purrr` f
 
 ### Question 2
 
-**Answer:**
+Suppose we have a list called my_list. Each element of the list is a numeric data frame (all columns are numeric). We want use `lapply()` to run the code `cor(numeric_matrix, method = "kendall")` on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify `method = "kendall"` when calling `lapply()`)
 
+**Answer:**
 
 ### Question 3
 
-**Answer:**
+What are two advantages of using `purrr` functions instead of the BaseR `apply` family?
 
+**Answer:**
 
 ### Question 4
 
+What is a side-effect function?
+
 **Answer:**
 
-
 ### Question 5
+
+Why can you name a variable `sd` in a function and not cause any issues with the `sd` function?
 
 **Answer:**
 
 
 ## Task 2 - Writing R Functions
 
-Adding this to make a change.
+### Step 1
+
+**Task:** Write a basic function (call it `getRMSE()`) that takes in a vector of responses and a vector of predictions and outputs the RMSE (Root Mean Square Error).
+
+```{r}
+getRMSE <- function(.x) {
+  1
+}
+```
+
+
+### Step 2
+
+**Task:** Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+### Step 3
+
+**Task:** Write a function called `getMAE()` that follows the specifications of the `getRMSE()` function.
+
+```{r}
+getMAE <- function(.x) {
+  3
+}
+```
+
+
+### Step 4
+
+**Task:** Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+
+### Step 5
+
+**Task:** Let’s create a `wrapper` function that can be used to get either or both metrics returned with a single function call. Do not rewrite your above two functions, call them inside the `wrapper` function (we would call the `getRMSE()` and `getMAE()` functions helper functions). When returning your values, give them appropriate names.
+
+```{r}
+#change function name
+wrapper <- function(.x, .y) {
+  if (FALSE) {
+    stop("Incorrect data passed as an argument.")
+  }
+  5
+}
+```
+
+
+### Step 6
+
+**Task:** Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+

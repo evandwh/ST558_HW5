@@ -4,20 +4,20 @@
     "href": "Homework_5.html",
     "title": "Homework_5",
     "section": "",
-    "text": "Create a markdown list with the following questions:\n\n\nWhat is the purpose of the lapply() function? What is the equivalent purrr function?\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:"
+    "text": "Create a markdown list with the following questions:\n\n\nWhat is the purpose of the lapply() function? What is the equivalent purrr function?\nAnswer:\n\n\n\nSuppose we have a list called my_list. Each element of the list is a numeric data frame (all columns are numeric). We want use lapply() to run the code cor(numeric_matrix, method = \"kendall\") on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify method = \"kendall\" when calling lapply())\nAnswer:\n\n\n\nWhat are two advantages of using purrr functions instead of the BaseR apply family?\nAnswer:\n\n\n\nWhat is a side-effect function?\nAnswer:\n\n\n\nWhy can you name a variable sd in a function and not cause any issues with the sd function?\nAnswer:"
   },
   {
     "objectID": "Homework_5.html#task-1---conceptual-questions",
     "href": "Homework_5.html#task-1---conceptual-questions",
     "title": "Homework_5",
     "section": "",
-    "text": "Create a markdown list with the following questions:\n\n\nWhat is the purpose of the lapply() function? What is the equivalent purrr function?\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:"
+    "text": "Create a markdown list with the following questions:\n\n\nWhat is the purpose of the lapply() function? What is the equivalent purrr function?\nAnswer:\n\n\n\nSuppose we have a list called my_list. Each element of the list is a numeric data frame (all columns are numeric). We want use lapply() to run the code cor(numeric_matrix, method = \"kendall\") on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify method = \"kendall\" when calling lapply())\nAnswer:\n\n\n\nWhat are two advantages of using purrr functions instead of the BaseR apply family?\nAnswer:\n\n\n\nWhat is a side-effect function?\nAnswer:\n\n\n\nWhy can you name a variable sd in a function and not cause any issues with the sd function?\nAnswer:"
   },
   {
     "objectID": "Homework_5.html#task-2---writing-r-functions",
     "href": "Homework_5.html#task-2---writing-r-functions",
     "title": "Homework_5",
     "section": "Task 2 - Writing R Functions",
-    "text": "Task 2 - Writing R Functions\nAdding this to make a change."
+    "text": "Task 2 - Writing R Functions\n\nStep 1\nTask: Write a basic function (call it getRMSE()) that takes in a vector of responses and a vector of predictions and outputs the RMSE (Root Mean Square Error).\n\ngetRMSE &lt;- function(.x) {\n  1\n}\n\n\n\nStep 2\nTask: Run the following code to create some response values and predictions.\n\nset.seed(10)\nn &lt;- 100\nx &lt;- runif(n)\nresp &lt;- 3 + 10 * x + rnorm(n)\npred &lt;- predict(lm(resp ~ x), data.frame(x))\n\n\n\nStep 3\nTask: Write a function called getMAE() that follows the specifications of the getRMSE() function.\n\ngetMAE &lt;- function(.x) {\n  3\n}\n\n\n\nStep 4\nTask: Run the following code to create some response values and predictions.\n\nset.seed(10)\nn &lt;- 100\nx &lt;- runif(n)\nresp &lt;- 3 + 10 * x + rnorm(n)\npred &lt;- predict(lm(resp ~ x), data.frame(x))\n\n\n\nStep 5\nTask: Let’s create a wrapper function that can be used to get either or both metrics returned with a single function call. Do not rewrite your above two functions, call them inside the wrapper function (we would call the getRMSE() and getMAE() functions helper functions). When returning your values, give them appropriate names.\n\n#change function name\nwrapper &lt;- function(.x, .y) {\n  if (FALSE) {\n    stop(\"Incorrect data passed as an argument.\")\n  }\n  5\n}\n\n\n\nStep 6\nTask: Run the following code to create some response values and predictions.\n\nset.seed(10)\nn &lt;- 100\nx &lt;- runif(n)\nresp &lt;- 3 + 10 * x + rnorm(n)\npred &lt;- predict(lm(resp ~ x), data.frame(x))"
   }
 ]
