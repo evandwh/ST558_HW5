@@ -1,0 +1,9 @@
+---
+title: "Homework_5"
+format: html
+authors: Evan Whitfield, Ralph Church, Ryan Friedman
+---
+
+## This is the opening header.
+
+This is the opening text.
