@@ -4,13 +4,20 @@
     "href": "Homework_5.html",
     "title": "Homework_5",
     "section": "",
-    "text": "This is the opening text."
+    "text": "Create a markdown list with the following questions:\n\n\nWhat is the purpose of the lapply() function? What is the equivalent purrr function?\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:"
   },
   {
-    "objectID": "Homework_5.html#this-is-the-opening-header.",
-    "href": "Homework_5.html#this-is-the-opening-header.",
+    "objectID": "Homework_5.html#task-1---conceptual-questions",
+    "href": "Homework_5.html#task-1---conceptual-questions",
     "title": "Homework_5",
     "section": "",
-    "text": "This is the opening text."
+    "text": "Create a markdown list with the following questions:\n\n\nWhat is the purpose of the lapply() function? What is the equivalent purrr function?\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:\n\n\n\nAnswer:"
+  },
+  {
+    "objectID": "Homework_5.html#task-2---writing-r-functions",
+    "href": "Homework_5.html#task-2---writing-r-functions",
+    "title": "Homework_5",
+    "section": "Task 2 - Writing R Functions",
+    "text": "Task 2 - Writing R Functions"
   }
 ]
