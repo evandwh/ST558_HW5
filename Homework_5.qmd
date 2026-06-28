@@ -12,7 +12,7 @@ Create a markdown list with the following questions:
 
 What is the purpose of the `lapply()` function? What is the equivalent `purrr` function?
 
-**Answer:**
+**Answer:** The equivalent `purrr` function is `map()`.
 
 ### Question 2
 
@@ -46,11 +46,20 @@ Why can you name a variable `sd` in a function and not cause any issues with the
 **Task:** Write a basic function (call it `getRMSE()`) that takes in a vector of responses and a vector of predictions and outputs the RMSE (Root Mean Square Error).
 
 ```{r}
-getRMSE <- function(.x) {
-  1
+getRMSE <- function(obs, pre, ...) {
+  if (length(obs) != length(pre)){
+    stop("Dimension mis-match")
+  }
+  n <- length(obs)
+  MSE <- mean((obs - pre)^2, ...)
+  RMSE <- sqrt(MSE)
+  RMSE
 }
 ```
 
+```{r}
+getRMSE(c(1,2,3,NA), c(2,2,2,4), na.rm = TRUE)
+```
 
 ### Step 2
 
@@ -62,7 +71,31 @@ n <- 100
 x <- runif(n)
 resp <- 3 + 10 * x + rnorm(n)
 pred <- predict(lm(resp ~ x), data.frame(x))
+
 ```
+
+```{r}
+getRMSE(resp, pred)
+```
+
+```{r}
+resp[1] <- NA
+pred[4] <- NA
+
+resp #checking to see 1st index is NA
+```
+
+```{r}
+getRMSE(resp, pred)
+#Should return NA do to NA in the vectors.
+```
+
+```{r}
+getRMSE(resp, pred, na.rm = TRUE)
+#Should return a value since NAs have been removed.
+
+```
+
 
 ### Step 3
 
