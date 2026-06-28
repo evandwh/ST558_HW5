@@ -81,10 +81,6 @@ getRMSE(resp, pred)
 resp[1] <- NA
 pred[4] <- NA
 
-resp #checking to see 1st index is NA
-```
-
-```{r}
 #Should return NA do to NA in the vectors.
 getRMSE(resp, pred)
 ```
@@ -128,11 +124,6 @@ getMAE(resp, pred)
 resp[1] <- NA
 pred[4] <- NA
 
-#Testing to see if NA shows in resp
-resp
-```
-
-```{r}
 #Should return NA
 getMAE(resp, pred)
 ```
