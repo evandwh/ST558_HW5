@@ -147,12 +147,33 @@ getMAE(resp, pred, na.rm = TRUE)
 **Task:** Let’s create a `wrapper` function that can be used to get either or both metrics returned with a single function call. Do not rewrite your above two functions, call them inside the `wrapper` function (we would call the `getRMSE()` and `getMAE()` functions helper functions). When returning your values, give them appropriate names.
 
 ```{r}
-#change function name
-wrapper <- function(.x, .y) {
-  if (FALSE) {
-    stop("Incorrect data passed as an argument.")
+getMETRICS <- function(obs, 
+                       pre, 
+                       metrics = c("RMSE","MAE"),
+                       ...) {
+  
+  #Scalable for new functions/metrics to be added later
+  metric_funs <- list(
+    RMSE = getRMSE,
+    MAE  = getMAE
+  )
+  
+  if (!(("RMSE" %in% metrics) || ("MAE" %in% metrics))) {
+    stop("Either RMSE or MAE must be passed in metrics.")
   }
-  5
+  if (any(!metrics %in% names(metric_funs))) {
+    stop("Unknown metric passed in metrics.")
+  }
+  if (!is.numeric(obs) || !is.numeric(pre)) {
+    stop("Incorrect data passed as an argument. Please use numeric vectors.")
+  }
+
+  result <- lapply(metrics, function(metr) {
+    metric_funs[[metr]](obs, pre, ...)
+  })
+
+  names(result) <- metrics
+  result
 }
 ```
 
@@ -168,4 +189,28 @@ x <- runif(n)
 resp <- 3 + 10 * x + rnorm(n)
 pred <- predict(lm(resp ~ x), data.frame(x))
 ```
+
+```{r}
+getMETRICS(resp,pred)
+```
+
+```{r}
+getMETRICS(resp,pred, metrics = "RMSE")
+```
+
+```{r}
+getMETRICS(resp,pred, metrics = "MAE")
+
+```
+```{r}
+resp[1] <- NA
+pred[4] <- NA
+getMETRICS(resp,pred)
+```
+
+```{r}
+getMETRICS(resp,pred,na.rm=TRUE)
+
+```
+
 
