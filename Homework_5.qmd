@@ -50,7 +50,6 @@ getRMSE <- function(obs, pre, ...) {
   if (length(obs) != length(pre)){
     stop("Dimension mis-match")
   }
-  n <- length(obs)
   MSE <- mean((obs - pre)^2, ...)
   RMSE <- sqrt(MSE)
   RMSE
@@ -86,14 +85,13 @@ resp #checking to see 1st index is NA
 ```
 
 ```{r}
-getRMSE(resp, pred)
 #Should return NA do to NA in the vectors.
+getRMSE(resp, pred)
 ```
 
 ```{r}
-getRMSE(resp, pred, na.rm = TRUE)
 #Should return a value since NAs have been removed.
-
+getRMSE(resp, pred, na.rm = TRUE)
 ```
 
 
@@ -102,11 +100,14 @@ getRMSE(resp, pred, na.rm = TRUE)
 **Task:** Write a function called `getMAE()` that follows the specifications of the `getRMSE()` function.
 
 ```{r}
-getMAE <- function(.x) {
-  3
+getMAE <- function(obs, pre, ...) {
+  if (length(obs) != length(pre)){
+    stop("Dimension mis-match")
+  }
+  MAE = mean(abs(obs - pre), ...)
+  MAE
 }
 ```
-
 
 ### Step 4
 
@@ -120,6 +121,26 @@ resp <- 3 + 10 * x + rnorm(n)
 pred <- predict(lm(resp ~ x), data.frame(x))
 ```
 
+```{r}
+getMAE(resp, pred)
+```
+```{r}
+resp[1] <- NA
+pred[4] <- NA
+
+#Testing to see if NA shows in resp
+resp
+```
+
+```{r}
+#Should return NA
+getMAE(resp, pred)
+```
+
+```{r}
+#Should return a value
+getMAE(resp, pred, na.rm = TRUE)
+```
 
 ### Step 5
 
