@@ -1,0 +1,108 @@
+---
+title: "HW5RF"
+format: html
+---
+
+## Task 1: Conceptual Questions
+
+1.  What is the purpose of the `lapply()` function? What is the equivalent `purrr` function?
+
+- `lapply()` applies a function to all elements of a list, and returns a list result. This is more convenient than looping through the list elements to apply the function. Within `purrr`, `map()` can be used to accomplish the same thing. `map()` has many variations for returning specific data types and/or accepting multiple list inputs.
+
+2.  Suppose we have a list called my_list. Each element of the list is a numeric data frame (all columns are numeric). We want use lapply() to run the code cor(numeric_matrix, method = "kendall") on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify method = "kendall" when calling lapply())
+
+- `lapply(my_list, cor, method = "kendall")`
+
+3.  What are two advantages of using purrr functions instead of the BaseR apply family?
+
+- `purrr` functions have many options for what inputs to accept and what format of output to return (i.e. `map_chr()` will always return a character vector)
+
+- `purrr` functions are compatible with the tidyverse and have consistent syntax
+
+4.  What is a side-effect function?
+
+- A side-effect function is a function that *does not* modify and return the argument (as opposed to a transformation function which does). Examples are plots or reading data.
+
+5.  Why can you name a variable sd in a function and not cause any issues with the sd function?
+
+- Functions create their own temporary environments for executing code. Variables defined within the function will not overwrite external variables/functions of the same name.
+
+## Task 2: Writing R Functions
+
+First load potentially useful packages.
+
+```{r}
+library(purrr)
+library(tidyr)
+library(dplyr)
+```
+
+1.  Write a basic function (call it getRMSE()) that takes in a vector of responses and a vector of predictions and outputs the RMSE. If a value is missing for the vector of responses (i.e. an NA is present), allow for additional arguments to the mean() function (elipses) that removes the NA values in the computation.
+
+```{r}
+getRMSE <- function(resp, pred, ...){
+  if(length(resp) != length(pred)) stop("vectors must be equal in length") # confirm vectors are equal in length
+  diffsq <- (resp-pred)^2 # squared difference
+  return(sqrt(mean(diffsq, ...))) # ... allows for na.rm = TRUE as an argument for mean
+}
+```
+
+2.  Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+- Test the RMSE function using this data.
+
+```{r}
+getRMSE(resp, pred)
+```
+
+- Replace two response values with missing values (`NA_real_`) and test again.
+
+```{r}
+resp[2] <- NA_real_
+pred[5] <- NA_real_
+getRMSE(resp, pred) # confirm that NA values will cause a NA result
+getRMSE(resp, pred, na.rm = TRUE) # confirm that na.rm = TRUE argument successfully passes into the mean() and the RMSE is returned
+```
+
+3.  Write a function called getMAE() (mean absolute deviation) that follows the specifications of the getRMSE() function.
+
+```{r}
+getMAE <- function(resp, pred, ...){
+  if(length(resp) != length(pred)) stop("vectors must be equal in length") # confirm vectors are equal in length
+  diffabs <- abs(resp-pred) # absolute difference
+  return(mean(diffabs, ...)) # ... allows for na.rm = TRUE as an argument for mean
+}
+```
+
+4.  Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+- Test the MAE function using this data.
+
+```{r}
+getMAE(resp, pred)
+```
+
+- Replace two response values with missing values (`NA_real_`) and test again.
+
+```{r}
+resp[3] <- NA_real_
+pred[4] <- NA_real_
+getMAE(resp, pred) # confirm that NA values will cause a NA result
+getMAE(resp, pred, na.rm = TRUE) # confirm that na.rm = TRUE argument successfully passes into the mean() and the RMSE is returned
+```
