@@ -175,7 +175,7 @@ getMETRICS <- function(obs,
     stop("Incorrect data passed as an argument. Please use numeric vectors.")
   }
 
-  result <- map(metrics, 
+  result <- map_dbl(metrics, 
                 \(metr) metric_funs[[metr]](obs, pre, ...)
   )
 
