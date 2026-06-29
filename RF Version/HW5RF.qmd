@@ -121,13 +121,16 @@ getBOTH <- function(resp, pred, metrics = c("RMSE", "MAE"), ...){
   if(!is.numeric(resp)|!is.numeric(pred)) stop("resp and pred must be numeric")
   # error checking the metric request
   if(!(all(metrics %in% c("RMSE", "MAE")))) stop("metrics must be a string vector of \"RMSE\" and/or \"MAE\"")
-  # do all calculations
-  resultRMSE <- getRMSE(resp, pred, ...)
-  resultMAE <- getMAE(resp, pred, ...)
-  # build results list with name assignment
-  results = c(RMSE = resultRMSE, MAE = resultMAE)
-  # return only the results requested per metrics argument
-  return(results[metrics])
+  # make a lookup table of desired functions
+  metFunctions <- list(
+    RMSE = getRMSE,
+    MAE = getMAE
+  )
+  # build results list based on metrics requested
+  results <- map(metrics, \(x) metFunctions[[x]](resp, pred, ...))
+  # assign names
+  names(results) <- metrics
+  return(results)
 }
 ```
 
