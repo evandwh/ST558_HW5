@@ -12,31 +12,34 @@ Create a markdown list with the following questions:
 
 What is the purpose of the `lapply()` function? What is the equivalent `purrr` function?
 
-**Answer:** The equivalent `purrr` function is `map()`.
+**Answer:** Use `lapply` to apply functions to each element in a list. The equivalent `purrr` function is `map()`.
 
 ### Question 2
 
 Suppose we have a list called my_list. Each element of the list is a numeric data frame (all columns are numeric). We want use `lapply()` to run the code `cor(numeric_matrix, method = "kendall")` on each element of the list. Write code to do this below! (I’m really trying to ask you how you specify `method = "kendall"` when calling `lapply()`)
 
-**Answer:**
+**Answer:** lapply(my_list, cor, method = "kendall")
 
 ### Question 3
 
 What are two advantages of using `purrr` functions instead of the BaseR `apply` family?
 
-**Answer:**
+**Answer:** 
+- The `purrr` functions tell you exactly what type of output you'll get, whereas the `apply` family can sometimes be difficult to predict the type of output. 
+
+- The `purrr` functions also work with the `tidyverse` which makes for cleaner and more readable syntax.
 
 ### Question 4
 
 What is a side-effect function?
 
-**Answer:**
+**Answer:** A side-effect function is a function that does something rather than `return` a value. It may print to the console, plot a graph, create a file, etc.  
 
 ### Question 5
 
 Why can you name a variable `sd` in a function and not cause any issues with the `sd` function?
 
-**Answer:**
+**Answer:** The variable inside of the function and the sd function would live in different environments. R looks for the named object/function in the first environment, and then moves on the 2nd environment if not found in the first environment. Values inside of functions exist in the first level, then the .GlobalEnv, and then the different packages loaded into R, until package:base.
 
 
 ## Task 2 - Writing R Functions
@@ -137,13 +140,26 @@ getMAE(resp, pred, na.rm = TRUE)
 
 **Task:** Let’s create a `wrapper` function that can be used to get either or both metrics returned with a single function call. Do not rewrite your above two functions, call them inside the `wrapper` function (we would call the `getRMSE()` and `getMAE()` functions helper functions). When returning your values, give them appropriate names.
 
+We will need to use the helper function below to check to see if the correct type of data is being passed into our wrapper function.
 ```{r}
+is.numeric_vector <- function(.x) {
+  if (is.numeric(.x) && is.vector(.x) && is.atomic(.x)) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
+```
+
+We create our `getMETRICS()` function to able to return any specified metrics. As of now, it only works for RMSE and MAE, and defaults to finding both.
+```{r}
+library(purrr)
 getMETRICS <- function(obs, 
                        pre, 
                        metrics = c("RMSE","MAE"),
                        ...) {
   
-  #Scalable for new functions/metrics to be added later
+  #Scale for new functions/metrics to be added later
   metric_funs <- list(
     RMSE = getRMSE,
     MAE  = getMAE
@@ -155,13 +171,13 @@ getMETRICS <- function(obs,
   if (any(!metrics %in% names(metric_funs))) {
     stop("Unknown metric passed in metrics.")
   }
-  if (!is.numeric(obs) || !is.numeric(pre)) {
+  if (!(is.numeric_vector(obs) && is.numeric_vector(pre))) {
     stop("Incorrect data passed as an argument. Please use numeric vectors.")
   }
 
-  result <- lapply(metrics, function(metr) {
-    metric_funs[[metr]](obs, pre, ...)
-  })
+  result <- map(metrics, 
+                \(metr) metric_funs[[metr]](obs, pre, ...)
+  )
 
   names(result) <- metrics
   result
