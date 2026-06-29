@@ -59,13 +59,14 @@ getRMSE <- function(obs, pre, ...) {
 }
 ```
 
-```{r}
-getRMSE(c(1,2,3,NA), c(2,2,2,4), na.rm = TRUE)
-```
+Our function checks to see if the vector of observed and predicted values is the same length. Then, it calculates and returns the RMSE. NA values can be removed if necessary.
+
 
 ### Step 2
 
 **Task:** Run the following code to create some response values and predictions.
+
+In order to test our `getRMSE()` function, we create a vector of observed values called `resp`, and a vector of prediction values called `pred`. We will follow this approach for each function.
 
 ```{r}
 set.seed(10)
@@ -73,12 +74,13 @@ n <- 100
 x <- runif(n)
 resp <- 3 + 10 * x + rnorm(n)
 pred <- predict(lm(resp ~ x), data.frame(x))
-
 ```
 
+Without any missing values, our function should return a value for RMSE.
 ```{r}
 getRMSE(resp, pred)
 ```
+The RMSE is found to be 0.9581677.
 
 ```{r}
 resp[1] <- NA
@@ -87,12 +89,13 @@ pred[4] <- NA
 #Should return NA do to NA in the vectors.
 getRMSE(resp, pred)
 ```
+With NA values present in either the observed vector or predicted vector (we test NAs in both), the function returns NA.
 
 ```{r}
 #Should return a value since NAs have been removed.
 getRMSE(resp, pred, na.rm = TRUE)
 ```
-
+Removing the NA values from the vectors, the function is able to calcualte the RMSE once again.
 
 ### Step 3
 
@@ -107,6 +110,8 @@ getMAE <- function(obs, pre, ...) {
   MAE
 }
 ```
+
+Now, we can calculate the MAE just like we did for the RMSE.
 
 ### Step 4
 
@@ -123,6 +128,8 @@ pred <- predict(lm(resp ~ x), data.frame(x))
 ```{r}
 getMAE(resp, pred)
 ```
+Without any NA values in either vector, the MAE is 0.8155776.
+
 ```{r}
 resp[1] <- NA
 pred[4] <- NA
@@ -130,11 +137,13 @@ pred[4] <- NA
 #Should return NA
 getMAE(resp, pred)
 ```
+Once again, with NA values present in either vector, the function returns NA.
 
 ```{r}
 #Should return a value
 getMAE(resp, pred, na.rm = TRUE)
 ```
+If we remove any NA values, we can calculate the new MAE.
 
 ### Step 5
 
@@ -165,6 +174,7 @@ getMETRICS <- function(obs,
     MAE  = getMAE
   )
   
+  #Checking to see that the inputs are correct for our function.
   if (!(("RMSE" %in% metrics) || ("MAE" %in% metrics))) {
     stop("Either RMSE or MAE must be passed in metrics.")
   }
@@ -175,10 +185,12 @@ getMETRICS <- function(obs,
     stop("Incorrect data passed as an argument. Please use numeric vectors.")
   }
 
+  #Map the list of metrics we want to calculate.
   result <- map_dbl(metrics, 
                 \(metr) metric_funs[[metr]](obs, pre, ...)
   )
 
+  #Add names to reference the correct metric.
   names(result) <- metrics
   result
 }
@@ -200,24 +212,30 @@ pred <- predict(lm(resp ~ x), data.frame(x))
 ```{r}
 getMETRICS(resp,pred)
 ```
+We can see that the function works, and gives both desired metrics.
+```{r}
+getMETRICS(resp,pred)["RMSE"]
+```
+We can call a single metric by name if we would like.
 
 ```{r}
 getMETRICS(resp,pred, metrics = "RMSE")
 ```
+Alternatively, we can pass the necessary metric as an argument.
 
 ```{r}
 getMETRICS(resp,pred, metrics = "MAE")
-
 ```
+
 ```{r}
 resp[1] <- NA
 pred[4] <- NA
 getMETRICS(resp,pred)
 ```
+The function returns NA for metrics if NA values are present in the vectors.
 
 ```{r}
 getMETRICS(resp,pred,na.rm=TRUE)
-
 ```
 
-
+If we remove the NA values from the vectors, then once again, our function will give us the RMSE and MAE metrics.
