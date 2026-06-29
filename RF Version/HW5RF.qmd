@@ -106,3 +106,69 @@ pred[4] <- NA_real_
 getMAE(resp, pred) # confirm that NA values will cause a NA result
 getMAE(resp, pred, na.rm = TRUE) # confirm that na.rm = TRUE argument successfully passes into the mean() and the RMSE is returned
 ```
+
+5.  Create a function to get both metrics returned in a single function call.
+
+- The function should check that two numeric atomic vectors have been passed
+
+- The function should return both metrics by default and include names
+
+```{r}
+getBOTH <- function(resp, pred, metrics = c("RMSE", "MAE"), ...){
+  # error checking the two vector inputs
+  if(!is.vector(resp)|!is.vector(pred)) stop("resp and pred must be vectors")
+  if(!is.atomic(resp)|!is.atomic(pred)) stop("resp and pred must be atomic (i.e. not lists)")
+  if(!is.numeric(resp)|!is.numeric(pred)) stop("resp and pred must be numeric")
+  # error checking the metric request
+  if(!(all(metrics %in% c("RMSE", "MAE")))) stop("metrics must be a string vector of \"RMSE\" and/or \"MAE\"")
+  # do all calculations
+  resultRMSE <- getRMSE(resp, pred, ...)
+  resultMAE <- getMAE(resp, pred, ...)
+  # build results list with name assignment
+  results = c(RMSE = resultRMSE, MAE = resultMAE)
+  # return only the results requested per metrics argument
+  return(results[metrics])
+}
+```
+
+6.  Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+- Test the function using this data. Call it for each metric individually, and then with both.
+
+```{r}
+getBOTH(resp, pred, metrics = "RMSE")
+getBOTH(resp, pred, metrics = "MAE")
+getBOTH(resp, pred, metrics = c("RMSE", "MAE"))
+```
+
+- Replace two of the response values with missing values, then test again. Use na.rm = TRUE
+
+```{r}
+resp[1] <- NA_real_
+pred[6] <- NA_real_
+getBOTH(resp, pred, metrics = "RMSE", na.rm = TRUE)
+getBOTH(resp, pred, metrics = "MAE", na.rm = TRUE)
+getBOTH(resp, pred, metrics = c("RMSE", "MAE"), na.rm = TRUE)
+```
+
+- Test function by passing incorrect data
+
+```{r}
+getBOTH(as_tibble(resp), pred)
+```
+
+```{r}
+getBOTH(as.character(resp), pred)
+```
+
+```{r}
+getBOTH(list(resp), pred)
+```
