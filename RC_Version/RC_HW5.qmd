@@ -1,0 +1,199 @@
+---
+title: "RC_HW5"
+format: html
+---
+
+## Task 1: Conceptual Questions
+
+1.  What is the purpose of the `lapply()` function? What is the equivalent `purrr` function?
+
+-   `lapply()` applies a function to each element of a list and returns the results as a list. The equivalent `purrr` function is `map()`. The `purrr` package also includes variations like `map_chr()`, `map_dbl()`, and `map_df()` when a specific output type is needed.
+
+2.  Suppose we have a list called `my_list`. Each element of the list is a numeric data frame. We want to use `lapply()` to run `cor(numeric_matrix, method = "kendall")` on each element of the list. Write code to do this below.
+
+-   `lapply(my_list, cor, method = "kendall")`
+
+3.  What are two advantages of using `purrr` functions instead of the Base R apply family?
+
+-   `purrr` functions have more consistent syntax and work well with tidyverse workflows.
+-   `purrr` has type-specific functions, such as `map_dbl()` and `map_chr()`, which make the expected output clearer.
+
+4.  What is a side-effect function?
+
+-   A side-effect function performs an action without mainly returning a transformed object. Examples include printing output, creating plots, writing files, or reading data.
+
+5.  Why can you name a variable `sd` in a function and not cause any issues with the `sd()` function?
+
+-   Functions have their own local environments. A variable named `sd` inside a function only exists within that function and does not overwrite the base R `sd()` function globally.
+
+## Task 2: Writing R Functions
+
+1.  Write a basic function called `getRMSE()` that takes in a vector of responses and a vector of predictions and outputs the RMSE. If a value is missing, allow additional arguments to be passed to `mean()` using ellipses.
+
+```{r}
+library(purrr)
+library(tidyr)
+library(dplyr)
+
+
+getRMSE <- function(resp, pred, ...) {
+  if (length(resp) != length(pred)) {
+    stop("resp and pred must have the same length")
+  }
+
+  sqrt(mean((resp - pred)^2, ...))
+}
+```
+
+2.  Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+Test the RMSE function using this data.
+
+```{r}
+getRMSE(resp, pred)
+```
+
+Replace two values with missing values and test again.
+
+```{r}
+resp[2] <- NA_real_
+pred[5] <- NA_real_
+
+getRMSE(resp, pred)
+getRMSE(resp, pred, na.rm = TRUE)
+```
+
+3.  Write a function called `getMAE()` that follows the specifications of the `getRMSE()` function.
+
+```{r}
+getMAE <- function(resp, pred, ...) {
+  if (length(resp) != length(pred)) {
+    stop("resp and pred must have the same length")
+  }
+
+  mean(abs(resp - pred), ...)
+}
+```
+
+4.  Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+Test the MAE function using this data.
+
+```{r}
+getMAE(resp, pred)
+```
+
+Replace two values with missing values and test again.
+
+```{r}
+resp[3] <- NA_real_
+pred[4] <- NA_real_
+
+getMAE(resp, pred)
+getMAE(resp, pred, na.rm = TRUE)
+```
+
+5.  Create a function to get both metrics returned in a single function call.
+
+The function should:
+
+-   check that two numeric atomic vectors have been passed
+-   return both metrics by default
+-   include names for the returned metrics
+
+```{r}
+getBOTH <- function(resp, pred, metrics = c("RMSE", "MAE"), ...) {
+  if (!is.atomic(resp) || !is.atomic(pred)) {
+    stop("resp and pred must be atomic vectors")
+  }
+
+  if (!is.numeric(resp) || !is.numeric(pred)) {
+    stop("resp and pred must be numeric")
+  }
+
+  if (length(resp) != length(pred)) {
+    stop("resp and pred must have the same length")
+  }
+
+  valid_metrics <- c("RMSE", "MAE")
+
+  if (!all(metrics %in% valid_metrics)) {
+    stop('metrics must contain only "RMSE" and/or "MAE"')
+  }
+
+  metric_functions <- list(
+    RMSE = getRMSE,
+    MAE = getMAE
+  )
+
+  results <- map_dbl(metrics, \(metric) {
+    metric_functions[[metric]](resp, pred, ...)
+  })
+
+  names(results) <- metrics
+  results
+}
+```
+
+6.  Run the following code to create some response values and predictions.
+
+```{r}
+set.seed(10)
+
+n <- 100
+x <- runif(n)
+resp <- 3 + 10 * x + rnorm(n)
+pred <- predict(lm(resp ~ x), data.frame(x))
+```
+
+Test the function using this data. Call it for each metric individually, and then with both.
+
+```{r}
+getBOTH(resp, pred, metrics = "RMSE")
+getBOTH(resp, pred, metrics = "MAE")
+getBOTH(resp, pred, metrics = c("RMSE", "MAE"))
+```
+
+Replace two values with missing values, then test again using `na.rm = TRUE`.
+
+```{r}
+resp[1] <- NA_real_
+pred[6] <- NA_real_
+
+getBOTH(resp, pred, metrics = "RMSE", na.rm = TRUE)
+getBOTH(resp, pred, metrics = "MAE", na.rm = TRUE)
+getBOTH(resp, pred, metrics = c("RMSE", "MAE"), na.rm = TRUE)
+```
+
+Test the function by passing incorrect data.
+
+```{r}
+getBOTH(as_tibble(resp), pred)
+```
+
+```{r}
+getBOTH(as.character(resp), pred)
+```
+
+```{r}
+getBOTH(list(resp), pred)
+```
+
